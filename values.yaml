@@ -1,6 +1,6 @@
 namespace: demo-project
 image:
-  mongodb: iossocket/mongo-set:4.4.0.1
+  mongodb: iossocket/mongo-set:4.4.0.2
 
 db:
   service:

@@ -37,6 +37,8 @@ spec:
           env:
           - name: "MONGODB_ID"
             value: {{ .Values.db.instance0.mongoId | quote }}
+          - name: "MONGO_CONFIGURE_REPLICA_SET"
+            value: "true"
           livenessProbe:
             exec:
               command:
