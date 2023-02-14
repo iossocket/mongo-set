@@ -1,0 +1,163 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ .Values.db.instance0.serviceName }}
+  labels:
+    run: {{ .Values.db.instance0.serviceName }}
+spec:
+  ports:
+  - port: {{ .Values.db.service.port }}
+    targetPort: {{ .Values.db.service.port }}
+    protocol: TCP
+  selector:
+    defacementComponent: {{ .Values.db.instance0.podName }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ .Values.db.instance0.podName }}
+  labels:
+    defacementComponent: {{ .Values.db.instance0.podName }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      defacementComponent: {{ .Values.db.instance0.podName }}
+  template:
+    metadata:
+      labels:
+        defacementComponent: {{ .Values.db.instance0.podName }}
+    spec:
+      containers:
+        - image: {{ .Values.image.mongodb }}
+          name: {{ .Values.db.instance0.podName }}
+          env:
+          - name: "MONGODB_ID"
+            value: {{ .Values.db.instance0.mongoId | quote }}
+          livenessProbe:
+            exec:
+              command:
+              - /bin/bash
+              - -c
+              - mongo --quiet --eval "db.getMongo()"
+            initialDelaySeconds: {{ .Values.db.probes.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.db.probes.livenessProbe.periodSeconds }}
+          volumeMounts:
+            - name: {{ .Values.db.instance0.pvName }}
+              mountPath: "/data/db"
+      volumes:
+        - name: {{ .Values.db.instance0.pvName }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.db.instance0.pvName }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ .Values.db.instance1.serviceName }}
+  labels:
+    run: {{ .Values.db.instance1.serviceName }}
+spec:
+  ports:
+  - port: {{ .Values.db.service.port }}
+    targetPort: {{ .Values.db.service.port }}
+    protocol: TCP
+  selector:
+    defacementComponent: {{ .Values.db.instance1.podName }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ .Values.db.instance1.podName }}
+  labels:
+    defacementComponent: {{ .Values.db.instance1.podName }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      defacementComponent: {{ .Values.db.instance1.podName }}
+  template:
+    metadata:
+      labels:
+        defacementComponent: {{ .Values.db.instance1.podName }}
+    spec:
+      containers:
+        - image: {{ .Values.image.mongodb }}
+          name: {{ .Values.db.instance1.podName }}
+          env:
+          - name: "MONGODB_ID"
+            value: {{ .Values.db.instance1.mongoId | quote }}
+          livenessProbe:
+            exec:
+              command:
+              - /bin/bash
+              - -c
+              - mongo --quiet --eval "db.getMongo()"
+            initialDelaySeconds: {{ .Values.db.probes.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.db.probes.livenessProbe.periodSeconds }}
+          volumeMounts:
+            - name: {{ .Values.db.instance1.pvName }}
+              mountPath: "/data/db"
+      volumes:
+        - name: {{ .Values.db.instance1.pvName }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.db.instance1.pvName }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ .Values.db.instance2.serviceName }}
+  labels:
+    run: {{ .Values.db.instance2.serviceName }}
+spec:
+  ports:
+  - port: {{ .Values.db.service.port }}
+    targetPort: {{ .Values.db.service.port }}
+    protocol: TCP
+  selector:
+    defacementComponent: {{ .Values.db.instance2.podName }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ .Values.db.instance2.podName }}
+  labels:
+    defacementComponent: {{ .Values.db.instance2.podName }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      defacementComponent: {{ .Values.db.instance2.podName }}
+  template:
+    metadata:
+      labels:
+        defacementComponent: {{ .Values.db.instance2.podName }}
+    spec:
+      containers:
+        - image: {{ .Values.image.mongodb }}
+          name: {{ .Values.db.instance2.podName }}
+          env:
+          - name: "MONGODB_ID"
+            value: {{ .Values.db.instance2.mongoId | quote }}
+          livenessProbe:
+            exec:
+              command:
+              - /bin/bash
+              - -c
+              - mongo --quiet --eval "db.getMongo()"
+            initialDelaySeconds: {{ .Values.db.probes.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.db.probes.livenessProbe.periodSeconds }}
+          volumeMounts:
+            - name: {{ .Values.db.instance2.pvName }}
+              mountPath: "/data/db"
+      volumes:
+        - name: {{ .Values.db.instance2.pvName }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.db.instance2.pvName }}
+---

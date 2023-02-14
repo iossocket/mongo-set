@@ -1,0 +1,33 @@
+namespace: demo-project
+image:
+  mongodb: iossocket/mongo-set:4.4.0.1
+
+db:
+  service:
+    port: 27017
+  probes:
+    livenessProbe:
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      failureThreshold: 10
+  instance0:
+    pvName: mongodb-rs0-0
+    storageClassName: nfs-client
+    storageSize: 2Gi
+    serviceName: mongodb-0-service
+    podName: mongodb-0
+    mongoId: mongo-0
+  instance1:
+    pvName: mongodb-rs0-1
+    storageClassName: nfs-client
+    storageSize: 2Gi
+    serviceName: mongodb-1-service
+    podName: mongodb-1
+    mongoId: mongo-1
+  instance2:
+    pvName: mongodb-rs0-2
+    storageClassName: second-nfs-client
+    storageSize: 2Gi
+    serviceName: mongodb-2-service
+    podName: mongodb-2
+    mongoId: mongo-2
