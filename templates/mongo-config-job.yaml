@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: mong-set-config
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - image: {{ .Values.image.mongodb }}
+        name: mong-set-config
+        imagePullPolicy: IfNotPresent
+        command:
+          - /bin/sh
+          - -c
+          - |
+            mongo --host mongodb-0-service.demo-project:27017 <<EOF
+            var cfg = { _id: 'platform-mongo-set', members: [ {_id: 0, host: 'mongodb-0-service.demo-project:27017', priority: 1}, {_id: 1, host: 'mongodb-1-service.demo-project:27017', priority: 0.9}, {_id: 2, host: 'mongodb-2-service.demo-project:27017', priority: 0.5} ] } 
+            rs.initiate(cfg, {force: true})
+            EOF
